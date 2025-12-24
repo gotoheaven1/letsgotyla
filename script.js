@@ -258,3 +258,42 @@ if (shuffleBtn) {
         }, 500);
     });
 }
+
+/* =========================================
+   [THE SAND OF TIME - COUNTDOWN SCRIPT]
+   ========================================= */
+
+function updateCountdown() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    
+    // 타일라 생일: 1월 30일 (월은 0부터 시작하므로 0 = 1월)
+    let birthday = new Date(currentYear, 0, 30);
+
+    // 만약 올해 생일이 이미 지났다면, 내년 생일로 설정
+    if (now > birthday) {
+        birthday = new Date(currentYear + 1, 0, 30);
+    }
+
+    const diff = birthday - now;
+
+    // 시간 계산
+    const d = Math.floor(diff / 1000 / 60 / 60 / 24);
+    const h = Math.floor((diff / 1000 / 60 / 60) % 24);
+    const m = Math.floor((diff / 1000 / 60) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    // HTML 요소가 있을 때만 실행
+    const daysEl = document.getElementById('days');
+    if (daysEl) {
+        document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+        document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+        document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+        document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+    }
+}
+
+// 1초마다 업데이트
+setInterval(updateCountdown, 1000);
+updateCountdown(); // 로드 되자마자 즉시 실행
+
