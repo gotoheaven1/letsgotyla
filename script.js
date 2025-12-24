@@ -1,32 +1,28 @@
-/* =========================================
-   1. 커스텀 커서 설정
-   ========================================= */
+// 1. 커스텀 커서 설정 (기존과 동일)
 const cursorDot = document.querySelector('.cursor-dot');
 const cursorCircle = document.querySelector('.cursor-circle');
 
-// 커서 요소가 있을 때만 실행하여 오류 방지
-if (cursorDot && cursorCircle) {
-    window.addEventListener('mousemove', (e) => {
-        cursorDot.style.left = `${e.clientX}px`;
-        cursorDot.style.top = `${e.clientY}px`;
-        
-        cursorCircle.animate({
-            left: `${e.clientX}px`,
-            top: `${e.clientY}px`
-        }, { duration: 500, fill: "forwards" });
-    });
+window.addEventListener('mousemove', (e) => {
+    cursorDot.style.left = `${e.clientX}px`;
+    cursorDot.style.top = `${e.clientY}px`;
+    
+    cursorCircle.animate({
+        left: `${e.clientX}px`,
+        top: `${e.clientY}px`
+    }, { duration: 500, fill: "forwards" });
+});
 
-    document.querySelectorAll('.hover-effect').forEach(el => {
-        el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-        el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-    });
-}
+document.querySelectorAll('.hover-effect').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+});
 
-/* =========================================
-   2. 인트로 비눗방울 애니메이션
-   ========================================= */
+
+// 2. 인트로 비눗방울 애니메이션 및 랜덤 가사 (index.html에서만 실행)
 const canvas = document.getElementById('bubbleCanvas');
-if (canvas) {
+const introQuoteText = document.getElementById('intro-quote-text');
+
+if (canvas && introQuoteText) { // 캔버스와 가사 요소가 모두 있을 때만 실행
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -42,6 +38,7 @@ if (canvas) {
             this.directionX = (Math.random() * .4) - .2;
             this.directionY = (Math.random() * 2) + 1;
             this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.originalColor = this.color; // 초기 색상 저장
         }
         draw() {
             ctx.beginPath();
@@ -91,13 +88,58 @@ if (canvas) {
         bubblesArray.forEach((bubble, index) => {
             const dist = Math.hypot(mouseX - bubble.x, mouseY - bubble.y);
             if (dist - bubble.radius < 1) {
+                // 터지는 애니메이션 (예시: 사라지기)
                 bubblesArray.splice(index, 1);
-                bubblesArray.push(new Bubble());
+                // 새로운 비눗방울 추가
+                bubblesArray.push(new Bubble()); 
             }
         });
     });
 
-    // 스페이스 바 진입 이벤트
+    // 인트로 가사 리스트
+    const introQuotes = [
+        "Make me lose my breath, make me water.",
+        "Deeper than the ocean, so you can't see the bottom.",
+        "Can we play truth or dare?",
+        "Giving me butterflies, got me flying high.",
+        "Dancing on the moon, I'm floating.",
+        "I'm a piece of art.",
+        "Face card never declines, my God.",
+        "You can look, but don't touch.",
+        "Always original, never a copy.",
+        "Don't you treat me like a regular.",
+        "You missed the chance to be my favorite.",
+        "Dare you to forget we were ever almost there.",
+        "You were my priority, now I'm a memory.",
+        "I run away from love 'cause I'm scared.",
+        "I need something safer.",
+        "You never gave us a chance to last.",
+        "Open up your heart, come take a seat.",
+        "I just wanna feel you on my body.",
+        "Got me wishing for more.",
+        "In the middle of the night, you're the light.",
+        "Put her in chanel"
+    ];
+
+    let currentIntroQuoteIndex = 0;
+
+    function displayNextIntroQuote() {
+        introQuoteText.style.opacity = '0'; // 페이드 아웃 시작
+        setTimeout(() => {
+            currentIntroQuoteIndex = (currentIntroQuoteIndex + 1) % introQuotes.length;
+            introQuoteText.innerText = introQuotes[currentIntroQuoteIndex];
+            introQuoteText.style.opacity = '1'; // 페이드 인 시작
+        }, 1000); // 1초 후에 텍스트 변경 및 페이드 인
+    }
+
+    // 초기 가사 표시
+    introQuoteText.innerText = introQuotes[currentIntroQuoteIndex];
+    introQuoteText.style.opacity = '1'; // 처음엔 바로 보이도록
+
+    // 10초마다 가사 변경 (CSS 애니메이션과 동기화)
+    setInterval(displayNextIntroQuote, 10000); // 10초 = CSS @keyframes의 총 시간
+
+    // 스페이스 바 이벤트 (메인 화면 진입)
     window.addEventListener('keydown', (e) => {
         if (e.code === 'Space') {
             const intro = document.getElementById('intro-canvas-layer');
@@ -112,42 +154,33 @@ if (canvas) {
     });
 }
 
-/* =========================================
-   3. 유튜브 IFrame API (오류 해결 강화판)
-   ========================================= */
+
+// 3. 유튜브 IFrame API (LP 플레이어) (기존과 동일)
 if (document.getElementById('youtube-player')) {
-    // API 스크립트 로드
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     let player;
-    // 요청하신 기존 영상 ID들
     const videoIds = ['mGyN2NMuS4A', 'xiZUf98A1Ts', 'uLK2r3sG4lE', 'n3s6lDf8Nq0', 'XoiOOiuH8iI'];
     let currentVideoId = videoIds[Math.floor(Math.random() * videoIds.length)];
 
-    // API 준비 완료 시 호출
     window.onYouTubeIframeAPIReady = function() {
         player = new YT.Player('youtube-player', {
             height: '100%',
             width: '100%',
             videoId: currentVideoId,
-            host: 'https://www.youtube.com', // 보안 설정 강화
             playerVars: {
-                'autoplay': 0, 
+                'autoplay': 0,
                 'controls': 1,
                 'rel': 0,
                 'playsinline': 1,
-                'enablejsapi': 1,
-                // 중요: 로컬에서 실행 시 origin이 없어서 오류가 날 수 있음.
-                // 웹서버(Live Server) 사용 필수
-                'origin': window.location.origin 
+                'origin': window.location.origin
             },
             events: {
                 'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange,
-                'onError': onPlayerError // [핵심] 오류 발생 시 처리 함수 추가
+                'onStateChange': onPlayerStateChange
             }
         });
     };
@@ -162,59 +195,66 @@ if (document.getElementById('youtube-player')) {
 
     function onPlayerStateChange(event) {
         if (event.data === YT.PlayerState.PLAYING) {
-            if(playerSection) playerSection.classList.add('playing');
-            if(playBtn) playBtn.innerText = "일시정지";
+            playerSection.classList.add('playing');
+            playBtn.innerText = "일시정지";
             updateTitle();
         } else if (event.data === YT.PlayerState.PAUSED) {
-            if(playerSection) playerSection.classList.remove('playing');
-            if(playBtn) playBtn.innerText = "재생";
+            playerSection.classList.remove('playing');
+            playBtn.innerText = "재생";
         } else if (event.data === YT.PlayerState.ENDED) {
             playNextTrack();
         }
     }
 
-    // [핵심 해결책] 오류 발생 시(153번 등) 자동으로 다음 곡 재생
-    function onPlayerError(event) {
-        console.warn(`영상 재생 오류 발생 (Code: ${event.data}). 다음 곡으로 넘어갑니다.`);
-        // 오류가 뜬 영상은 건너뛰고 바로 다음 곡 실행
-        setTimeout(() => {
-            playNextTrack();
-        }, 1000); // 1초 뒤 다음 곡 (너무 빠르면 무한 루프 위험 방지)
-    }
-
     function updateTitle() {
         if (player && player.getVideoData) {
-            const data = player.getVideoData();
-            if(titleText && data.title) {
-                titleText.innerText = data.title;
-            }
+            titleText.innerText = player.getVideoData().title;
         }
     }
 
     function playNextTrack() {
         let newId = videoIds[Math.floor(Math.random() * videoIds.length)];
-        // 같은 곡 반복 방지 (곡이 1개면 제외)
-        if (videoIds.length > 1) {
-            while(newId === currentVideoId) {
-                newId = videoIds[Math.floor(Math.random() * videoIds.length)];
-            }
-        }
+        while(newId === currentVideoId) newId = videoIds[Math.floor(Math.random() * videoIds.length)];
         currentVideoId = newId;
         player.loadVideoById(currentVideoId);
     }
 
-    // 버튼 이벤트 연결
-    if (playBtn) {
-        playBtn.addEventListener('click', () => {
-            if (!player) return;
-            const state = player.getPlayerState();
-            if (state === 1) player.pauseVideo();
-            else player.playVideo();
-        });
-    }
+    playBtn.addEventListener('click', () => {
+        const state = player.getPlayerState();
+        if (state === 1) player.pauseVideo();
+        else player.playVideo();
+    });
 
-    const nextBtn = document.getElementById('next-track-btn');
-    if (nextBtn) {
-        nextBtn.addEventListener('click', playNextTrack);
-    }
+    document.getElementById('next-track-btn').addEventListener('click', playNextTrack);
+}
+
+
+// 4. 메인 페이지 QUOTE GENERATOR SCRIPT (기존과 동일)
+const quotes = [
+    { text: "Make me sweat, make me hotter", source: "Water" },
+    { text: "I'm the girl next door, but I'm not innocent", source: "Girl Next Door" },
+    { text: "Johannesburg to the World", source: "Tyla" },
+    { text: "Always been the one, been the muse", source: "Truth or Dare" },
+    { text: "African music is going to take over", source: "Interview" },
+    { text: "I just want to be a global star", source: "Tyla" },
+    { text: "Can't get enough, I need more", source: "Safer" }
+];
+
+const quoteText = document.getElementById('quote-text');
+const quoteSource = document.getElementById('quote-source');
+const shuffleBtn = document.getElementById('shuffle-btn');
+
+if (shuffleBtn) {
+    shuffleBtn.addEventListener('click', () => {
+        quoteText.classList.add('fade-out');
+        quoteSource.classList.add('fade-out');
+
+        setTimeout(() => {
+            const random = Math.floor(Math.random() * quotes.length);
+            quoteText.innerText = quotes[random].text;
+            quoteSource.innerText = "- " + quotes[random].source + " -";
+            quoteText.classList.remove('fade-out');
+            quoteSource.classList.remove('fade-out');
+        }, 500);
+    });
 }
