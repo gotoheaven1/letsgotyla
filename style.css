@@ -527,3 +527,97 @@ canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; } /* �
     .intro-guide { font-size: 0.7rem; }
 }
 
+/* =========================================
+   [THE SAND OF TIME STYLES]
+   ========================================= */
+.sand-time-section {
+    padding: 80px 0;
+    border-top: 1px solid #1a1a1a;
+    background: linear-gradient(to bottom, #0a0a0a, #050505);
+    text-align: center;
+}
+
+.sand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* 모래시계 아이콘 & 애니메이션 */
+.hourglass-icon svg {
+    width: 50px;
+    height: 50px;
+    color: var(--chanel-gold);
+    animation: rotateHourglass 6s ease-in-out infinite; /* 6초마다 뒤집힘 */
+}
+
+@keyframes rotateHourglass {
+    0% { transform: rotate(0deg); }
+    45% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); } /* 휙 돌리기 */
+    95% { transform: rotate(180deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.time-title {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    color: var(--chanel-gold);
+    letter-spacing: 3px;
+    margin-bottom: 5px;
+}
+
+.time-subtitle {
+    font-size: 0.8rem;
+    color: #666;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+/* 카운트다운 타이머 레이아웃 */
+#countdown-timer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-unit span {
+    font-family: var(--font-head);
+    font-size: 3rem;
+    color: var(--text-white);
+    line-height: 1;
+    font-variant-numeric: tabular-nums; /* 숫자 간격 일정하게 */
+}
+
+.time-unit .label {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    color: var(--chanel-gold);
+    margin-top: 10px;
+    letter-spacing: 2px;
+}
+
+.separator {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px; /* 숫자랑 높이 맞추기 */
+}
+
+/* 모바일 반응형 */
+@media (max-width: 600px) {
+    #countdown-timer { gap: 10px; }
+    .time-unit span { font-size: 2rem; }
+    .separator { font-size: 1.5rem; }
+}
+
+
