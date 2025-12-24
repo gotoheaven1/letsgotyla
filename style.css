@@ -455,3 +455,75 @@ footer { text-align: center; padding: 80px 0; color: #444; font-size: 0.8rem; bo
     .disco-grid { grid-template-columns: 1fr; }
     .flip-card { max-width: 350px; margin: 0 auto; }
 }
+/* [인트로 섹션 (캔버스)] */
+#intro-canvas-layer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background: #000; z-index: 5000;
+    transition: opacity 1s ease, visibility 1s ease;
+    display: flex; /* 가사와 제목을 중앙 정렬하기 위해 추가 */
+    justify-content: center;
+    align-items: center;
+}
+#intro-canvas-layer.fade-out {
+    opacity: 0; visibility: hidden; pointer-events: none;
+}
+canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; } /* 캔버스를 뒤로 보냄 */
+
+.intro-text-box {
+    position: relative; /* 캔버스 위에 위치 */
+    text-align: center;
+    pointer-events: none;
+    z-index: 2; /* 캔버스 위로 오도록 설정 */
+    display: flex; /* 내부 요소들을 세로로 정렬 */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* 가사가 길어도 중앙에 오도록 */
+    max-width: 800px; /* 가사 최대 너비 제한 */
+}
+.intro-title {
+    font-family: var(--font-head); font-size: 5rem; color: var(--chanel-gold);
+    letter-spacing: 0.2em; margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(207, 170, 101, 0.4); /* 제목도 약간 빛나게 */
+}
+
+/* 새로 추가되는 인트로 가사 스타일 */
+.intro-quote-box {
+    min-height: 120px; /* 가사 길이가 달라져도 높이 유지 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 0 20px; /* 좌우 여백 */
+}
+#intro-quote-text {
+    font-family: var(--font-head); /* 우아한 폰트 */
+    font-size: 1.8rem; /* 적당한 크기 */
+    color: var(--text-white);
+    line-height: 1.5;
+    letter-spacing: 1px;
+    opacity: 0; /* 초기에는 숨겨두기 */
+    animation: fadeInOutIntroQuote 10s ease-in-out infinite; /* 페이드인아웃 애니메이션 */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* 약간의 그림자 */
+    max-width: 700px; /* 너무 길게 늘어지지 않게 */
+}
+
+/* 인트로 가사 페이드인/아웃 애니메이션 */
+@keyframes fadeInOutIntroQuote {
+    0% { opacity: 0; transform: translateY(10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    40% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 0; transform: translateY(10px); }
+}
+
+.intro-guide {
+    font-size: 0.9rem; color: #666; letter-spacing: 2px; line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .intro-title { font-size: 3rem; }
+    #intro-quote-text { font-size: 1.2rem; min-height: 90px; }
+    .intro-guide { font-size: 0.7rem; }
+}
+
