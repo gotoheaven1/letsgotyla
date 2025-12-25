@@ -140,19 +140,33 @@ if (canvas && introQuoteText) { // 캔버스와 가사 요소가 모두 있을 �
     setInterval(displayNextIntroQuote, 10000); // 10초 = CSS @keyframes의 총 시간
 
     // 스페이스 바 이벤트 (메인 화면 진입)
+    /* [기존 키보드 이벤트 부분을 아래 코드로 교체하세요] */
+    
+    // 입장 함수 (중복 사용을 위해 함수로 분리)
+    function enterSite() {
+        const intro = document.getElementById('intro-canvas-layer');
+        const main = document.getElementById('main-content');
+        if (intro && main && !intro.classList.contains('fade-out')) {
+            intro.classList.add('fade-out'); 
+            main.classList.remove('hidden');
+            setTimeout(() => main.classList.add('visible'), 100);
+        }
+    }
+
+    // 1. 스페이스바 누르면 입장
     window.addEventListener('keydown', (e) => {
         if (e.code === 'Space') {
-            const intro = document.getElementById('intro-canvas-layer');
-            const main = document.getElementById('main-content');
-            
-            if (intro && main && !intro.classList.contains('fade-out')) {
-                intro.classList.add('fade-out');
-                main.classList.remove('hidden');
-                setTimeout(() => main.classList.add('visible'), 100);
-            }
+            enterSite();
         }
     });
-}
+
+    // 2. 글자 박스(타이틀, 명언 등)를 터치/클릭해도 입장
+    const introTextBox = document.querySelector('.intro-text-box');
+    if (introTextBox) {
+        introTextBox.addEventListener('click', () => {
+            enterSite();
+        });
+    }
 
 
 // 3. 유튜브 IFrame API (LP 플레이어) (기존과 동일)
@@ -296,4 +310,5 @@ function updateCountdown() {
 // 1초마다 업데이트
 setInterval(updateCountdown, 1000);
 updateCountdown(); // 로드 되자마자 즉시 실행
+
 
